@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path 
+    d="M50 20 H150 V70 H100 V100 H150 V180 H50 V130 H100 V100 H50 Z" 
+    fill="none" 
+    stroke="white" 
+    stroke-width="8" 
+    stroke-linecap="round"
+  />
+</svg>
