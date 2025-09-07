@@ -11,7 +11,7 @@ export default function Layout({ children, pageTitle }: LayoutProps) {
     <div className="min-h-screen flex flex-col bg-neutral-950 text-neutral-100">
       {/* Top Bar */}
       {/* <Header /> */}
-      <Header />
+      {/* <Header /> */}
 
       <div className="flex flex-1">
         {/* Rotated Page Title */}

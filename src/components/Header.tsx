@@ -1,91 +1,77 @@
 'use client';
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from './Navbar';
+import { cn } from '@/utils/cn';
 
-const navigationItems = [
-  { name: 'Home', href: '#', id: 1 },
-  { name: 'About', href: '#', id: 2 },
-  { name: 'Services', href: '#', id: 3 },
-  { name: 'Portfolio', href: '#', id: 4 },
-  { name: 'Contact', href: '#', id: 5 },
-];
-
-const FullScreenNav = () => {
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const router = useRouter();
+
+  const Logo = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" height="40">
+      <path
+        d="M50 20 H150 V70 H100 V100 H150 V180 H50 V130 H100 V100 H50 Z"
+        fill="none"
+        stroke="white"
+        strokeWidth="8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+
+  const handleRoute = () => {
+    router.push('/', { scroll: false });
+    setIsOpen(false);
+  };
 
   return (
-    <nav className="relative z-50">
-      {/* Hamburger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-6 right-6 z-50 p-2 w-12 h-12 rounded-lg bg-gray-900 hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
-        aria-label="Toggle navigation"
-      >
-        <div className="relative w-8 h-8">
-          <motion.span
-            className="absolute left-0 block w-full h-0.5 bg-white"
-            animate={isOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-          />
-          <motion.span
-            className="absolute left-0 block w-full h-0.5 bg-white"
-            animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: 0.1 }}
-          />
-          <motion.span
-            className="absolute left-0 block w-full h-0.5 bg-white"
-            animate={isOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-          />
-        </div>
-      </button>
-
-      {/* Full-screen Navigation */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-gradient-to-br from-gray-900 to-black"
-          >
-            <motion.ul
-              className="flex flex-col items-center justify-center h-full space-y-8"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                visible: {
-                  transition: {
-                    staggerChildren: 0.1,
-                    delayChildren: 0.2,
-                  },
-                },
-              }}
-            >
-              {navigationItems.map((item) => (
-                <motion.li
-                  key={item.id}
-                  variants={{
-                    hidden: { y: 20, opacity: 0 },
-                    visible: { y: 0, opacity: 1 },
-                  }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <a
-                    href={item.href}
-                    className="text-4xl md:text-6xl font-bold text-white hover:text-blue-400 transition-colors duration-300"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.div>
+    <header className="w-full top-0 z-[100] bg-neutral-950 sticky ">
+      <div
+        className={cn(
+          `flex w-full items-center justify-between px-6 py-4 relative z-[101] ${
+            isOpen && 'border-b border-neutral-700'
+          }`
         )}
-      </AnimatePresence>
-    </nav>
-  );
-};
+      >
+        <div
+          className="flex items-center cursor-pointer"
+          aria-label="logo"
+          onClick={handleRoute}
+        >
+          <Logo />
+          <span className="py-1 px-2 text-emerald-600 border border-neutral-200 ml-2">
+            SULEJMAN
+          </span>
+        </div>
+        <motion.button
+          aria-label="Toggle menu"
+          className="text-xl cursor-pointer"
+          onClick={toggleMenu}
+          animate={{
+            scale: isOpen ? [1, 1.2, 1] : 1,
+          }}
+          transition={{
+            duration: 0.3,
+            times: [0, 0.5, 1],
+          }}
+        >
+          {isOpen ? (
+            <span className="hover:text-emerald-600">Close</span>
+          ) : (
+            <span className="hover:text-emerald-600">Menu</span>
+          )}
+        </motion.button>
+      </div>
 
-export default FullScreenNav;
+      {/* Navbar overlay */}
+      <AnimatePresence>
+        {isOpen && <Navbar toggleMenu={toggleMenu} />}
+      </AnimatePresence>
+    </header>
+  );
+}
